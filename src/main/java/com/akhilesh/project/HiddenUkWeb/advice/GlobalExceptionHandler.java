@@ -1,0 +1,32 @@
+package com.akhilesh.project.HiddenUkWeb.advice;
+
+import com.akhilesh.project.HiddenUkWeb.exception.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<?>>handleResourceNotFound(ResourceNotFoundException e){
+        ApiError apiError=ApiError.builder()
+                .status(HttpStatus.NOT_FOUND)
+                .message(e.getMessage())
+                .build();
+        return buildErrorReponseEntity(apiError);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<?>>handleInternalServerError(Exception e){
+        ApiError apiError=ApiError.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message(e.getMessage())
+                .build();
+        return buildErrorReponseEntity(apiError);
+    }
+    private ResponseEntity<ApiResponse<?>>buildErrorReponseEntity(ApiError error){
+        return new ResponseEntity<>(new ApiResponse<>(error),error.getStatus());
+    }
+}

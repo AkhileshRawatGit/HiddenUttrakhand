@@ -23,25 +23,35 @@ public class Hotel {
     @Column(nullable = false)
     private String city;
 
-    @Column(columnDefinition = "JSON")
-    private String amenities;
+    @ElementCollection
+    private List<String> amenities;
 
-    @Column(columnDefinition = "JSON")
-    private String photos;
+    @ElementCollection
+    private List<String> photos;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
 
     @Embedded
     private HotelContactInfo contactInfo;
 
     @Column(nullable = false)
-    private Boolean active;
+    private Boolean active=true;
+
 
     @OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY)
-    private List<Room> room;
+    private List<Room> rooms;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "place_id")
+    private Place place;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
 }

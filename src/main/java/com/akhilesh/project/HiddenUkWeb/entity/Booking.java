@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,11 +21,11 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "hotel_id",nullable = false
-    )
-    private Hotel hotel;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(
+//            name = "hotel_id",nullable = false
+//    )
+//    private Hotel hotel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id",nullable = false)
@@ -37,11 +38,14 @@ public class Booking {
     @Column(nullable = false)
     private Integer roomCount;
 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalPrice;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     @Column(nullable = false)
     private LocalDate checkInDate;
@@ -49,9 +53,9 @@ public class Booking {
     @Column(nullable = false)
     private LocalDate checkOutDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "payment_id")
-    private Payment payment;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(nullable = false, name = "payment_id")
+//    private Payment payment;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
@@ -62,5 +66,5 @@ public class Booking {
     joinColumns = @JoinColumn(name = "booking_id"),
             inverseJoinColumns = @JoinColumn(name = "guest_id")
     )
-    private Set<Guest> guest;
+    private Set<Guest> guests;
 }

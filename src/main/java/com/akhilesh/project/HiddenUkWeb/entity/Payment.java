@@ -25,11 +25,17 @@ public class Payment {
     @Column(nullable = false,precision = 10,scale = 2)
     private BigDecimal amount;
 
+    @OneToOne
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
+
+    private String paymentMethod;
 
     @Enumerated(value = EnumType.STRING)
     private PaymentStatus paymentStatus;

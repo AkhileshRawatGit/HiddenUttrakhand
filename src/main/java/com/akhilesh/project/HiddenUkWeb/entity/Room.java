@@ -22,10 +22,10 @@ public class Room {
     private Hotel hotel;
 
     @Column(nullable = false)
-    private String type;
+    private String roomType;
 
     @Column(nullable = false,precision = 10, scale = 2)
-    private BigDecimal bestPrice;
+    private BigDecimal pricePerNight;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -43,5 +43,8 @@ public class Room {
     private Integer totalCount;
 
     @Column(nullable = false)
-    private Integer capacity;
+    private Integer availableCount;
+
+    @Column(nullable = false)
+    private Integer maxOccupancy;
 }

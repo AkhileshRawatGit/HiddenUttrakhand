@@ -1,7 +1,7 @@
 package com.akhilesh.project.HiddenUkWeb.entity.enums;
 
-public enum Role {
-    USER,
-    ADMIN,
-    HOTEL_OWNER
+public enum Plan {
+    BASIC,
+    PLATINUM,
+    DIAMOND
 }
