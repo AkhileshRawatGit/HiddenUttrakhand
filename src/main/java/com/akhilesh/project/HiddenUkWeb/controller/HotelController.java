@@ -43,4 +43,10 @@ public class HotelController {
         return ResponseEntity.ok(dto1);
 
     }
+
+    @DeleteMapping("place/{placeId}/hotel/{hotelId}")
+    public ResponseEntity<?>deleteHotel(@PathVariable Long hotelId,@PathVariable Long placeId){
+        service.deleteById(placeId, hotelId);
+        return ResponseEntity.ok("Hotel deleted successfully!");
+    }
 }

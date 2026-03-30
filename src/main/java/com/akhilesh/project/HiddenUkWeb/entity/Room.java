@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,11 +34,11 @@ public class Room {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column(columnDefinition = "JSON")
-    private String amenities;
+    @ElementCollection
+    private List<String> amenities;
 
-    @Column(columnDefinition = "JSON")
-    private String photos;
+    @ElementCollection
+    private List<String> photos;
 
     @Column(nullable = false)
     private Integer totalCount;
