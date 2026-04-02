@@ -8,6 +8,8 @@ import com.akhilesh.project.HiddenUkWeb.entity.Room;
 import com.akhilesh.project.HiddenUkWeb.exception.ResourceNotFoundException;
 import com.akhilesh.project.HiddenUkWeb.repository.HotelRepo;
 import com.akhilesh.project.HiddenUkWeb.repository.RoomRepo;
+import com.akhilesh.project.HiddenUkWeb.service.Inventory.InventoryService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class RoomServiceImpl implements RoomService{
     private final RoomRepo roomRepo;
     private final HotelRepo hotelRepo;
     private final ModelMapper modelMapper;
+    private final InventoryService inventoryService;
     @Override
     public RoomResponseDto createRoom(Long hotelId, CreateRoomRequestDto dto) {
 
@@ -28,6 +31,10 @@ public class RoomServiceImpl implements RoomService{
         Room room= modelMapper.map(dto,Room.class);
         room.setHotel(hotel);
         roomRepo.save(room);
+
+        if(hotel.getActive()){
+            inventoryService.initializeRoomForAYear(room);
+        }
         return modelMapper.map(room,RoomResponseDto.class);
     }
 
@@ -67,6 +74,7 @@ public class RoomServiceImpl implements RoomService{
         return modelMapper.map(updatedRoom, RoomResponseDto.class);
     }
     @Override
+    @Transactional
     public void deleteRoom(Long hotelId, Long roomId) {
         Room room = roomRepo.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
@@ -75,6 +83,7 @@ public class RoomServiceImpl implements RoomService{
             throw new RuntimeException("Room does not belong to this hotel!");
         }
 
+        inventoryService.deleteFutureInventories(room);
         roomRepo.deleteById(roomId);
     }
 }

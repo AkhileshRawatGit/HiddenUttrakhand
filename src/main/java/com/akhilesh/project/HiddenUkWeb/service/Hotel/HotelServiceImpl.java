@@ -5,9 +5,12 @@ import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelResponseDTO;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.UpdateHotelRequestDto;
 import com.akhilesh.project.HiddenUkWeb.entity.Hotel;
 import com.akhilesh.project.HiddenUkWeb.entity.Place;
+import com.akhilesh.project.HiddenUkWeb.entity.Room;
 import com.akhilesh.project.HiddenUkWeb.exception.ResourceNotFoundException;
 import com.akhilesh.project.HiddenUkWeb.repository.HotelRepo;
 import com.akhilesh.project.HiddenUkWeb.repository.placeRepo;
+import com.akhilesh.project.HiddenUkWeb.service.Inventory.InventoryService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class HotelServiceImpl implements HotelService {
     private final HotelRepo hotelRepo;
     private final placeRepo placeRepo;
     private final ModelMapper modelMapper;
+    private final InventoryService inventoryService;
 
     @Override
     public HotelResponseDTO createHotel(CreateHotelRequestDTO dto) {
@@ -64,12 +68,27 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long placeId,Long hotelId) {
         Hotel hotel=hotelRepo.findById(hotelId).orElseThrow(()->new ResourceNotFoundException("hotel not found with id: "+hotelId));
         if (!hotel.getPlace().getId().equals(placeId)) {
             throw new RuntimeException("Hotel does not belong to this place!");
         }
         hotelRepo.deleteById(hotelId);
+        for(Room room:hotel.getRooms()){
+            inventoryService.deleteFutureInventories(room);
+        }
+    }
+
+    @Override
+    public void activeHotel(Long hotelId) {
+        Hotel hotel=hotelRepo.findById(hotelId).orElseThrow(()->
+                new ResourceNotFoundException("hotel not found with this id: "+hotelId));
+        hotel.setActive(true);
+
+        for(Room room:hotel.getRooms()){
+            inventoryService.initializeRoomForAYear(room);
+        }
     }
 
 }

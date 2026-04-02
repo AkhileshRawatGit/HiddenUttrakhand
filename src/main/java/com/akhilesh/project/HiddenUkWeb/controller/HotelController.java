@@ -49,4 +49,10 @@ public class HotelController {
         service.deleteById(placeId, hotelId);
         return ResponseEntity.ok("Hotel deleted successfully!");
     }
+
+    @PatchMapping("/{hotelId}")
+    public ResponseEntity<?> activeHotel(@PathVariable Long hotelId){
+        service.activeHotel(hotelId);
+        return ResponseEntity.noContent().build();
+    }
 }
