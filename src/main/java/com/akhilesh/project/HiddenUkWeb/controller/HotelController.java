@@ -1,5 +1,6 @@
 package com.akhilesh.project.HiddenUkWeb.controller;
 
+import com.akhilesh.project.HiddenUkWeb.advice.ApiResponse;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.CreateHotelRequestDTO;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelResponseDTO;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.UpdateHotelRequestDto;
@@ -47,7 +48,7 @@ public class HotelController {
     @DeleteMapping("place/{placeId}/hotel/{hotelId}")
     public ResponseEntity<?>deleteHotel(@PathVariable Long hotelId,@PathVariable Long placeId){
         service.deleteById(placeId, hotelId);
-        return ResponseEntity.ok("Hotel deleted successfully!");
+        return ResponseEntity.ok(new ApiResponse<>("Hotel deleted successfully!"));
     }
 
     @PatchMapping("/{hotelId}")

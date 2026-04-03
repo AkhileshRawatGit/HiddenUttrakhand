@@ -83,7 +83,7 @@ public class RoomServiceImpl implements RoomService{
             throw new RuntimeException("Room does not belong to this hotel!");
         }
 
-        inventoryService.deleteFutureInventories(room);
+        inventoryService.deleteAllInventories(room);
         roomRepo.deleteById(roomId);
     }
 }

@@ -8,6 +8,7 @@ import com.akhilesh.project.HiddenUkWeb.entity.Place;
 import com.akhilesh.project.HiddenUkWeb.entity.Room;
 import com.akhilesh.project.HiddenUkWeb.exception.ResourceNotFoundException;
 import com.akhilesh.project.HiddenUkWeb.repository.HotelRepo;
+import com.akhilesh.project.HiddenUkWeb.repository.RoomRepo;
 import com.akhilesh.project.HiddenUkWeb.repository.placeRepo;
 import com.akhilesh.project.HiddenUkWeb.service.Inventory.InventoryService;
 import jakarta.transaction.Transactional;
@@ -26,6 +27,7 @@ public class HotelServiceImpl implements HotelService {
     private final placeRepo placeRepo;
     private final ModelMapper modelMapper;
     private final InventoryService inventoryService;
+    private final RoomRepo roomRepo;
 
     @Override
     public HotelResponseDTO createHotel(CreateHotelRequestDTO dto) {
@@ -74,10 +76,12 @@ public class HotelServiceImpl implements HotelService {
         if (!hotel.getPlace().getId().equals(placeId)) {
             throw new RuntimeException("Hotel does not belong to this place!");
         }
-        hotelRepo.deleteById(hotelId);
+
         for(Room room:hotel.getRooms()){
-            inventoryService.deleteFutureInventories(room);
+            inventoryService.deleteAllInventories(room);
+            roomRepo.deleteById(room.getId());
         }
+        hotelRepo.deleteById(hotelId);
     }
 
     @Override
