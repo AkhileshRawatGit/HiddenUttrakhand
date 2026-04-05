@@ -1,8 +1,10 @@
 package com.akhilesh.project.HiddenUkWeb.service.Hotel;
 
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.CreateHotelRequestDTO;
+import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelInfoDto;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelResponseDTO;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.UpdateHotelRequestDto;
+import com.akhilesh.project.HiddenUkWeb.dto.RoomDto.RoomResponseDto;
 import com.akhilesh.project.HiddenUkWeb.entity.Hotel;
 import com.akhilesh.project.HiddenUkWeb.entity.Place;
 import com.akhilesh.project.HiddenUkWeb.entity.Room;
@@ -93,6 +95,15 @@ public class HotelServiceImpl implements HotelService {
         for(Room room:hotel.getRooms()){
             inventoryService.initializeRoomForAYear(room);
         }
+    }
+
+    @Override
+    public HotelInfoDto getHotelInfo(Long hotelId) {
+        Hotel hotel=hotelRepo.findById(hotelId).orElseThrow(()->new ResourceNotFoundException("hotel not found with this id:"+hotelId));
+        List<RoomResponseDto>roomResponseDtoList=hotel.getRooms().stream()
+                .map(r->modelMapper.map(r,RoomResponseDto.class))
+                .toList();
+        return new HotelInfoDto(modelMapper.map(hotel,HotelResponseDTO.class),roomResponseDtoList);
     }
 
 }
