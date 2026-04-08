@@ -39,7 +39,6 @@ public class placeServiceImpl implements placeService {
         PlaceResponseDTO dto=modelMapper.map(places, PlaceResponseDTO.class);
         return dto;
     }
-
     @Override
     public List<PlaceResponseDTO> getAllPlaces() {
         List<Place>places=repo.findAll();

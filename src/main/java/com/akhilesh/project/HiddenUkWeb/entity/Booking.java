@@ -2,8 +2,7 @@ package com.akhilesh.project.HiddenUkWeb.entity;
 
 import com.akhilesh.project.HiddenUkWeb.entity.enums.BookingStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,16 +15,19 @@ import java.util.Set;
 @Getter
 @Setter
 @Table
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(
-//            name = "hotel_id",nullable = false
-//    )
-//    private Hotel hotel;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "hotel_id",nullable = false
+    )
+    private Hotel hotel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id",nullable = false)
@@ -53,9 +55,7 @@ public class Booking {
     @Column(nullable = false)
     private LocalDate checkOutDate;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(nullable = false, name = "payment_id")
-//    private Payment payment;
+
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
