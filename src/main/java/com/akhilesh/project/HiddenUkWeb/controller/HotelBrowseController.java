@@ -3,6 +3,7 @@ package com.akhilesh.project.HiddenUkWeb.controller;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelInfoDto;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelResponseDTO;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelSearchRequest;
+import com.akhilesh.project.HiddenUkWeb.dto.Strategy.HotelPriceDto;
 import com.akhilesh.project.HiddenUkWeb.service.Hotel.HotelService;
 import com.akhilesh.project.HiddenUkWeb.service.Inventory.InventoryService;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class HotelBrowseController {
     private final HotelService hotelService;
     @GetMapping("/search")
     public ResponseEntity<?>searchHotel(@RequestBody HotelSearchRequest request){
-        Page<HotelResponseDTO> page=inventoryService.searchHotels(request);
+        Page<HotelPriceDto> page=inventoryService.searchHotels(request);
         return ResponseEntity.ok(page);
     }
 

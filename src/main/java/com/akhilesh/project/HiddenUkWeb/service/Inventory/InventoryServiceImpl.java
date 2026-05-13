@@ -2,9 +2,10 @@ package com.akhilesh.project.HiddenUkWeb.service.Inventory;
 
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelResponseDTO;
 import com.akhilesh.project.HiddenUkWeb.dto.HotelDto.HotelSearchRequest;
-import com.akhilesh.project.HiddenUkWeb.entity.Hotel;
+import com.akhilesh.project.HiddenUkWeb.dto.Strategy.HotelPriceDto;
 import com.akhilesh.project.HiddenUkWeb.entity.Inventory;
 import com.akhilesh.project.HiddenUkWeb.entity.Room;
+import com.akhilesh.project.HiddenUkWeb.repository.HotelMinPriceRepo;
 import com.akhilesh.project.HiddenUkWeb.repository.InventoryRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,6 +24,8 @@ public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepo inventoryRepo;
     private final ModelMapper modelMapper;
+
+    private  final HotelMinPriceRepo hotelMinPriceRepo;
     @Override
     public void initializeRoomForAYear(Room room) {
         LocalDate today=LocalDate.now();
@@ -51,11 +54,13 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Page<HotelResponseDTO> searchHotels(HotelSearchRequest request) {
+    public Page<HotelPriceDto> searchHotels(HotelSearchRequest request) {
         Pageable pageable= PageRequest.of(request.getPage(),request.getSize());
         Long dateCount= ChronoUnit.DAYS.between(request.getStartDate(),request.getEndDate())+1;
-        Page<Hotel>hotels=inventoryRepo.findHotelWithAvailableInventory(request.getCity(),request.getStartDate(),request.getEndDate(),request.getRoomCount(),
+
+        
+        Page<HotelPriceDto>hotels=hotelMinPriceRepo.findHotelWithAvailableInventory(request.getCity(),request.getStartDate(),request.getEndDate(),request.getRoomCount(),
                 dateCount,pageable);
-        return hotels.map(h->modelMapper.map(h,HotelResponseDTO.class));
+        return hotels;
     }
 }

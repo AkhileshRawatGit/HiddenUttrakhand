@@ -20,6 +20,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "hotel_id",nullable = false)
+
     private Hotel hotel;
 
     @Column(nullable = false)
